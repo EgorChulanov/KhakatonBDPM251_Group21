@@ -1,0 +1,8 @@
+Subject: Срочно: не работает Active Directory
+From: d.orlov@corp.local
+
+Hi,
+
+Сервис Active Directory не отвечает с 9:15. Пробовали перезайти — не помогает. Несколько коллег из Логистика подтвердили ту же проблему.
+
+Прикрепил: contract_v2.docx

@@ -1,0 +1,11 @@
+From: Людмила Захарова <l.zaharova@corp.local>
+To: it-support@company.ru
+Date: 2025-03-04 15:51
+Subject: [IT] [INFO] Плановый отчёт мониторинга
+
+Hi,
+
+ALERT: Database cluster не прошёл healthcheck 3 раза подряд.
+Требуется проверка.
+
+Файл: error_log.txt

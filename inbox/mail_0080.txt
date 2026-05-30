@@ -1,0 +1,13 @@
+Subject: [CRITICAL] Disk usage > 75% на prod
+From: d.orlov@corp.local
+
+Уважаемые коллеги,
+
+Плановый отчёт мониторинга за сутки.
+Uptime: 99.9%
+Ошибок 5xx: 9
+Среднее время ответа: 118ms
+
+Otpravleno s iPhone
+
+Прикрепил: contract_v2.docx

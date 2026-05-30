@@ -1,0 +1,18 @@
+From: alerts <alerts@grafana.internal>
+To: it-support@company.ru
+Date: 2025-04-08 13:01
+Subject: [INFO] Плановый отчёт мониторинга
+
+Hi,
+
+ALERT: Database cluster не прошёл healthcheck 3 раза подряд.
+Требуется проверка.
+
+С уважением,
+Павел Соколов
+
+Прикрепил: contract_v2.docx
+
+ID заявки: #35042
+
+Код ошибки: ERR_837

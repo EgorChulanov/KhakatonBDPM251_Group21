@@ -1,0 +1,13 @@
+From: John Smith <john.smith@globaltech.com>
+To: it-support@company.ru
+Date: 2025-02-03 13:32
+Subject: [INFO] API Gateway не отвечает на healthcheck
+
+Автоматическое уведомление от системы мониторинга.
+
+Сервис: API Gateway
+Статус: INFO
+Метрика: CPU usage 77%
+Время: 2026-05-28 19:58
+
+Это письмо сгенерировано автоматически.
