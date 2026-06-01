@@ -1,15 +1,3 @@
-"""
-Основная программа: читает письма из inbox, классифицирует, раскладывает по
-папкам, ведёт лог и считает статистику.
-
-Запуск:
-    python3 sorter.py            # обычный запуск
-    python3 sorter.py --dry-run  # показать, куда попадёт каждое письмо, но
-                                 # ничего не перемещать
-
-Используем только то, что было на занятиях: классы (ООП), работа с файлами и
-папками (os, open), перемещение файлов, исключения, модуль sys для аргументов.
-"""
 
 import os
 import sys
@@ -19,14 +7,11 @@ from classifier import Classifier
 
 
 class MailSorter:
-    """Связывает всё вместе: чтение -> классификация -> перемещение -> отчёт."""
-
     def __init__(self, inbox="inbox", dry_run=False):
         self.inbox = inbox            # папка с входящими письмами
         self.dry_run = dry_run        # режим "только показать, не перемещать"
         self.classifier = Classifier()
         self.log_lines = []           # строки для лог-файла
-        # счётчик: категория -> сколько писем туда попало
         self.stats = {}
         self.broken = 0               # сколько файлов не удалось прочитать
 
@@ -36,7 +21,7 @@ class MailSorter:
         self.log_lines.append(message)
 
     def make_folders(self):
-        """Создать папки категорий (и папку broken для битых файлов)."""
+        #Создать папки категорий (и папку broken для битых файлов)
         folders = self.classifier.categories()
         folders.append("broken")
         for name in folders:
@@ -44,20 +29,20 @@ class MailSorter:
                 os.makedirs(name)
 
     def move_file(self, filename, category):
-        """Переместить файл из inbox в папку категории."""
+        #Переместить файл из inbox в папку категории
         source = os.path.join(self.inbox, filename)
         target = os.path.join(category, filename)
         os.rename(source, target)
 
     def add_stat(self, category):
-        """Увеличить счётчик категории на 1."""
+        #Увеличить счётчик категории на 1
         if category in self.stats:
             self.stats[category] = self.stats[category] + 1
         else:
             self.stats[category] = 1
 
     def run(self):
-        """Обработать все письма из папки inbox."""
+        #Обработать все письма из папки inbox
         if not os.path.exists(self.inbox):
             self.log("ОШИБКА: папка inbox не найдена: " + self.inbox)
             return
@@ -96,7 +81,7 @@ class MailSorter:
         self.report()
 
     def report(self):
-        """Вывести статистику и сохранить лог-файл."""
+        #Вывести статистику и сохранить лог-файл
         self.log("-" * 40)
         self.log("ИТОГ:")
         total = 0
