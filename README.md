@@ -340,7 +340,7 @@ echo 'GIGACHAT_API_KEY=ваш_ключ' > .env
 
 | Участник            | GitHub               | Роль / вклад                          |
 |---------------------|----------------------|---------------------------------------|
-| Egor Chulanov       | @EgorChulanov        | _(заполните)_                         |
+| Egor Chulanov       | @EgorChulanov        | Расширение ГигаЧат, презентация, README, email_message.py, LICENCE MIT АХАХАХ X))                         |
 | Ekaterina Makarenko | @byKatty             |README, test_classifier.py, презентация|
 | Maks Shiryaev       | @MaksShiryaev        | _(заполните)_                         |
 | Varvara Stukanova   | @varvarstukanova-hue | _(заполните)_                         |
