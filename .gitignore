@@ -11,3 +11,6 @@ spam/
 notifications/
 other/
 broken/
+
+.DS_Store
+.vscode/

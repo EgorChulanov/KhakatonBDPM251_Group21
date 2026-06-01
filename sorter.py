@@ -1,6 +1,7 @@
 
 import os
 import sys
+import logging
 
 from email_message import read_email, EmailError
 from classifier import Classifier
@@ -11,14 +12,26 @@ class MailSorter:
         self.inbox = inbox            # папка с входящими письмами
         self.dry_run = dry_run        # режим "только показать, не перемещать"
         self.classifier = Classifier()
-        self.log_lines = []           # строки для лог-файла
         self.stats = {}
         self.broken = 0               # сколько файлов не удалось прочитать
+        self.setup_logger()
 
-    def log(self, message):
-        """Записать строку в лог и вывести на экран."""
-        print(message)
-        self.log_lines.append(message)
+    def setup_logger(self):          # настраиваем логгер
+        self.logger = logging.getLogger("Message")
+        self.logger.setLevel(logging.INFO)
+
+        fmt = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
+
+        console = logging.StreamHandler()
+        console.setFormatter(fmt)
+        self.logger.addHandler(console)
+
+        # хендлер «в файл» — только в боевом режиме (не в dry-run)
+        if not self.dry_run:
+            file_h = logging.FileHandler("report.txt", mode="w", encoding="utf-8")
+            file_h.setFormatter(fmt)
+            self.logger.addHandler(file_h)
+        
 
     def make_folders(self):
         #Создать папки категорий (и папку broken для битых файлов)
@@ -32,7 +45,13 @@ class MailSorter:
         #Переместить файл из inbox в папку категории
         source = os.path.join(self.inbox, filename)
         target = os.path.join(category, filename)
-        os.rename(source, target)
+        try:
+            os.rename(source, target)
+        except OSError as e:
+            # сюда попадаем, ТОЛЬКО если внутри try возникла ошибка типа OSError
+            # логируем объект ошибки
+            self.logger.warning("возникла ошибка с перемещеннием файла: %s", e)
+
 
     def add_stat(self, category):
         #Увеличить счётчик категории на 1
@@ -44,20 +63,22 @@ class MailSorter:
     def run(self):
         #Обработать все письма из папки inbox
         if not os.path.exists(self.inbox):
-            self.log("ОШИБКА: папка inbox не найдена: " + self.inbox)
+            self.logger.error("ОШИБКА: папка inbox не найдена: " + self.inbox)
             return
 
         if not self.dry_run:
             self.make_folders()
 
         files = sorted(os.listdir(self.inbox))
-        self.log("Найдено файлов: " + str(len(files)))
-        self.log("-" * 40)
+        self.logger.info("Найдено файлов: " + str(len(files)))
+        self.logger.info("-" * 40)
 
         for filename in files:
             path = os.path.join(self.inbox, filename)
             if not os.path.isfile(path):
                 continue                      # пропускаем папки, если попались
+            if filename.startswith("."):
+                continue                      # не учитываем системные файлы
 
             # пробуем прочитать письмо
             try:
@@ -65,7 +86,7 @@ class MailSorter:
             except EmailError as e:
                 # битый/нечитаемый файл -> в папку broken, в лог пишем причину
                 self.broken = self.broken + 1
-                self.log(filename + " -> broken (" + str(e) + ")")
+                self.logger.warning(filename + " -> broken (" + str(e) + ")")
                 if not self.dry_run:
                     self.move_file(filename, "broken")
                 self.add_stat("broken")
@@ -73,7 +94,7 @@ class MailSorter:
 
             # классифицируем и перемещаем
             category = self.classifier.classify(email)
-            self.log(filename + " -> " + category)
+            self.logger.info(filename + " -> " + category)
             if not self.dry_run:
                 self.move_file(filename, category)
             self.add_stat(category)
@@ -82,23 +103,16 @@ class MailSorter:
 
     def report(self):
         #Вывести статистику и сохранить лог-файл
-        self.log("-" * 40)
-        self.log("ИТОГ:")
+        self.logger.info("-" * 40)
+        self.logger.info("ИТОГ:")
         total = 0
         for category in self.stats:
             total = total + self.stats[category]
         for category in sorted(self.stats):
             count = self.stats[category]
-            self.log("  " + category + ": " + str(count))
-        self.log("Всего обработано: " + str(total))
-        self.log("Из них не удалось прочитать: " + str(self.broken))
-
-        # сохраняем лог в файл (работа с файлами)
-        if not self.dry_run:
-            f = open("report.txt", "w", encoding="utf-8")
-            f.write("\n".join(self.log_lines))
-            f.close()
-            self.log("Отчёт сохранён в report.txt")
+            self.logger.info("  " + category + ": " + str(count))
+        self.logger.info("Всего обработано: " + str(total))
+        self.logger.info("Из них не удалось прочитать: " + str(self.broken))
 
 
 def main():
