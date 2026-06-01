@@ -211,7 +211,7 @@ python3 -m pytest -v
 | Ekaterina Makarenko | @byKatty             |README, test_classifier.py, презентация|
 | Maks Shiryaev       | @MaksShiryaev        | _(заполните)_                         |
 | Varvara Stukanova   | @varvarstukanova-hue | _(заполните)_                         |
-| Grigory Pislegin    | @GrigoryPislegin     | _(заполните)_                         |
+| Grigory Pislegin    | @GrigoryPislegin     | Запуск и интеграция проекта, bash-скрипт run.sh, журналирование (logging) и обработка проблемных файлов в sorter.py, синхронизация репозитория |
 
 ---
 
