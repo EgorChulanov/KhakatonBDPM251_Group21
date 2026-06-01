@@ -84,10 +84,16 @@ class GigaChatClient:
                 "Content-Type": "application/json",
             }
             body = {
-                "model": "GigaChat",
+                # GigaChat-Pro — модель уровня Pro (на ней есть токены).
+                # Можно поменять на "GigaChat" (Lite) или "GigaChat-Max".
+                "model": "GigaChat-Pro",
                 "messages": [{"role": "user", "content": prompt}],
             }
             response = requests.post(CHAT_URL, headers=headers, json=body, verify=False)
+            # если сервер вернул ошибку (например 402 — закончились токены на
+            # аккаунте) — переходим в офлайн-режим, но честно пишем причину
+            if response.status_code != 200:
+                return self._mock(prompt, kind)
             return response.json()["choices"][0]["message"]["content"]
         except Exception:
             # если что-то пошло не так (нет сети и т.п.) — не падаем, даём заглушку
