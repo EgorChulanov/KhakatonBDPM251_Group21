@@ -1,3 +1,4 @@
+#!/bin/bash
 # Папка с входящими письмами, которую ожидает приложение.
 INBOX="inbox"
 
@@ -16,7 +17,7 @@ if ! command -v python3 >/dev/null 2>&1; then
 fi
 
 # 3) Запуск приложения. "$@" пробрасывает аргументы дальше,
-#    чтобы работало и ./run.example.sh --dry-run.
+#    чтобы работало и ./run.sh --dry-run.
 #    | tee run.log  -> печатает на экран И дублирует в файл run.log.
 echo "Запуск..."
 python3 sorter.py "$@" | tee run.log
