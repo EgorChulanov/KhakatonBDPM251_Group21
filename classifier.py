@@ -1,16 +1,3 @@
-"""
-Классификатор писем по правилам.
-
-Идея простая: для каждой категории заданы ключевые слова. Смотрим, слова какой
-категории встречаются в письме, и относим письмо туда, где совпадений больше.
-Если совпадений нет совсем — письмо идёт в категорию "other" (на ручной разбор),
-чтобы ни одно письмо не потерялось. Это и есть устойчивость классификации:
-система не угадывает наугад, а честно откладывает непонятное письмо.
-
-Используем только класс и словарь со списками — всё это было на занятиях (ООП).
-"""
-
-
 class Classifier:
     """Раскладывает письма по категориям на основе ключевых слов."""
 
@@ -42,15 +29,11 @@ class Classifier:
 
     def classify(self, email):
         """Вернуть название категории для письма (строку)."""
-        # пустое письмо отдельно — анализировать нечего
         if email.is_empty():
             return "other"
-
         text = email.text()
-
         best_category = "other"
         best_count = 0
-
         # считаем совпадения по каждой категории
         for category in self.rules:
             count = 0
@@ -61,16 +44,15 @@ class Classifier:
                 best_count = count
                 best_category = category
 
-        # ещё одна проверка: письма от автоматических адресов — это уведомления
+        # доп проверим, что письма от автоматических адресов будут уведомлениями
         if best_count == 0:
             sender = email.sender.lower()
             if "no-reply" in sender or "noreply" in sender or "alerts@" in sender or "monitoring" in sender:
                 return "notifications"
-
         return best_category
 
     def categories(self):
         """Список всех папок, которые может создать классификатор."""
         result = list(self.rules.keys())
-        result.append("other")     # для писем без совпадений
+        result.append("other")
         return result
